@@ -27,6 +27,7 @@ public abstract class UiEngineRuntimeHttpWrapper implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+        httpResponse.setContentType("text/html;charset=UTF-8");
         String pageName = getPageName(httpRequest);
         PrintWriter writer = httpResponse.getWriter();
         UiEngine uiEngine = getUiEngine(httpRequest);
