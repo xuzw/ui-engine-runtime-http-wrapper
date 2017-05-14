@@ -38,9 +38,14 @@ public abstract class AbstractWebUiEngineRuntimeHttpFilter implements Filter {
         IOUtils.closeQuietly(writer);
     }
 
-    protected abstract String getSourcePageName(HttpServletRequest httpRequest);
+    protected String getSourcePageName(HttpServletRequest httpRequest) {
+        String uri = httpRequest.getRequestURI();
+        return uri.substring(uri.lastIndexOf("/") + 1);
+    }
 
-    protected abstract Event getEvent(HttpServletRequest httpRequest);
+    protected Event getEvent(HttpServletRequest httpRequest) {
+        return new WebUiEngineCookies(httpRequest.getCookies()).getEvent();
+    }
 
     protected abstract WebUiEngineProvider getWebUiEngineProvider();
 }
