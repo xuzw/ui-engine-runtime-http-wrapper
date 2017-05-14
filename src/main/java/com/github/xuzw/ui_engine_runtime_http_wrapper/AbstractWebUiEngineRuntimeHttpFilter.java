@@ -16,6 +16,8 @@ import org.apache.commons.io.IOUtils;
 import com.github.xuzw.ui_engine_runtime.UiEngine;
 import com.github.xuzw.ui_engine_runtime.event.Event;
 import com.github.xuzw.ui_engine_runtime.page.Page;
+import com.github.xuzw.ui_engine_runtime_http_wrapper.cookie.WebUiEngineCookies;
+import com.github.xuzw.ui_engine_runtime_http_wrapper.provider.WebUiEngineProvider;
 
 /**
  * @author 徐泽威 xuzewei_2012@126.com

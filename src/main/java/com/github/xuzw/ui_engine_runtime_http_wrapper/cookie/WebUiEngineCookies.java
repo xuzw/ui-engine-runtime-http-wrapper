@@ -1,4 +1,4 @@
-package com.github.xuzw.ui_engine_runtime_http_wrapper;
+package com.github.xuzw.ui_engine_runtime_http_wrapper.cookie;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,6 +7,7 @@ import javax.servlet.http.Cookie;
 
 import com.github.xuzw.ui_engine_runtime.event.Event;
 import com.github.xuzw.ui_engine_runtime.event.RefreshEvent;
+import com.github.xuzw.ui_engine_runtime.input.Inputs;
 
 /**
  * @author 徐泽威 xuzewei_2012@126.com
@@ -41,17 +42,28 @@ public class WebUiEngineCookies {
     }
 
     public Event getEvent() {
+        Inputs inputs = getInputs();
         if (eventType == null) {
-            return new RefreshEvent();
+            Event event = new RefreshEvent();
+            event.setInputs(inputs);
+            return event;
         }
         try {
-            return (Event) Class.forName(eventType.getValue()).newInstance();
+            Event event = (Event) Class.forName(eventType.getValue()).newInstance();
+            event.setInputs(inputs);
+            return event;
         } catch (Exception e) {
-            return new RefreshEvent();
+            Event event = new RefreshEvent();
+            event.setInputs(inputs);
+            return event;
         }
     }
 
-    public List<Cookie> getInputs() {
+    public Inputs getInputs() {
+        Inputs inputs = new Inputs();
+        for (Cookie cookie : this.inputs) {
+            inputs.put(cookie.getName().substring(key_prefix_input.length()), cookie.getValue());
+        }
         return inputs;
     }
 }
