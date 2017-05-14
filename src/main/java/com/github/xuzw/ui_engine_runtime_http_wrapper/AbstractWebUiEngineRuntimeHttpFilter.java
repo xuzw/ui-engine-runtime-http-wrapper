@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 
+import com.github.xuzw.ui_engine_runtime.UiEngine;
 import com.github.xuzw.ui_engine_runtime.event.RefreshEvent;
 import com.github.xuzw.ui_engine_runtime.page.Page;
 
@@ -20,7 +21,7 @@ import com.github.xuzw.ui_engine_runtime.page.Page;
  * @author 徐泽威 xuzewei_2012@126.com
  * @time 2017年5月12日 下午2:35:14
  */
-public abstract class WebUiEngineRuntimeHttpFilter implements Filter {
+public abstract class AbstractWebUiEngineRuntimeHttpFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
@@ -29,7 +30,7 @@ public abstract class WebUiEngineRuntimeHttpFilter implements Filter {
         httpResponse.setContentType("text/html;charset=UTF-8");
         String sourcePageName = getSourcePageName(httpRequest);
         PrintWriter writer = httpResponse.getWriter();
-        WebUiEngine engine = getWebUiEngineProvider().get(httpRequest);
+        UiEngine engine = getWebUiEngineProvider().get(httpRequest);
         Page response = engine.execute(new RefreshEvent(engine.getPage(sourcePageName)));
         writer.println(response.toHtml());
         IOUtils.closeQuietly(writer);
