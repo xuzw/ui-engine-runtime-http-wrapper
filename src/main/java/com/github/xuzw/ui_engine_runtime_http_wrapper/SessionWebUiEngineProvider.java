@@ -13,16 +13,16 @@ public abstract class SessionWebUiEngineProvider implements WebUiEngineProvider 
     public static final String key = UiEngine.class.getName();
 
     @Override
-    public UiEngine get(HttpServletRequest request) {
+    public WebUiEngine get(HttpServletRequest request) {
         HttpSession session = request.getSession();
         Object engine = session.getAttribute(key);
         if (engine == null) {
-            UiEngine newInstance = newInstance(session);
+            WebUiEngine newInstance = newInstance(session);
             session.setAttribute(key, newInstance);
             return newInstance;
         }
-        return (UiEngine) engine;
+        return (WebUiEngine) engine;
     }
 
-    public abstract UiEngine newInstance(HttpSession session);
+    public abstract WebUiEngine newInstance(HttpSession session);
 }
