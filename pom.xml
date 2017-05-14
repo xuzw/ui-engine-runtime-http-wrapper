@@ -4,7 +4,7 @@
 
     <groupId>com.github.xuzw</groupId>
     <artifactId>ui-engine-runtime-http-wrapper</artifactId>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <packaging>jar</packaging>
 
     <name>ui-engine-runtime-http-wrapper</name>
