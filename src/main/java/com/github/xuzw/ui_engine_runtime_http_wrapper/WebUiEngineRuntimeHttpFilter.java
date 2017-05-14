@@ -21,22 +21,22 @@ import com.github.xuzw.ui_engine_runtime.page.Page;
  * @author 徐泽威 xuzewei_2012@126.com
  * @time 2017年5月12日 下午2:35:14
  */
-public abstract class UiEngineRuntimeHttpWrapper implements Filter {
+public abstract class WebUiEngineRuntimeHttpFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         httpResponse.setContentType("text/html;charset=UTF-8");
-        String pageName = getPageName(httpRequest);
+        String sourcePageName = getSourcePageName(httpRequest);
         PrintWriter writer = httpResponse.getWriter();
-        UiEngine uiEngine = getUiEngine(httpRequest);
-        Page response = uiEngine.execute(new RefreshEvent(uiEngine.getPage(pageName)));
+        UiEngine uiEngine = getWebUiEngineProvider().get(httpRequest);
+        Page response = uiEngine.execute(new RefreshEvent(uiEngine.getPage(sourcePageName)));
         writer.println(response.toHtml());
         IOUtils.closeQuietly(writer);
     }
 
-    protected abstract String getPageName(HttpServletRequest httpRequest);
+    protected abstract String getSourcePageName(HttpServletRequest httpRequest);
 
-    protected abstract UiEngine getUiEngine(HttpServletRequest httpRequest);
+    protected abstract WebUiEngineProvider getWebUiEngineProvider();
 }
