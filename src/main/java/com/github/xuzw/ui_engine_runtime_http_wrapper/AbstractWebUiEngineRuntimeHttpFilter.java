@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
 import com.github.xuzw.ui_engine_runtime.UiEngine;
-import com.github.xuzw.ui_engine_runtime.event.RefreshEvent;
+import com.github.xuzw.ui_engine_runtime.event.Event;
 import com.github.xuzw.ui_engine_runtime.page.Page;
 
 /**
@@ -29,14 +29,18 @@ public abstract class AbstractWebUiEngineRuntimeHttpFilter implements Filter {
         HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
         httpResponse.setContentType("text/html;charset=UTF-8");
         String sourcePageName = getSourcePageName(httpRequest);
-        PrintWriter writer = httpResponse.getWriter();
         UiEngine engine = getWebUiEngineProvider().get(httpRequest);
-        Page response = engine.execute(new RefreshEvent(engine.getPage(sourcePageName)));
+        Event event = getEvent(httpRequest);
+        event.setSource(engine.getPage(sourcePageName));
+        Page response = engine.execute(event);
+        PrintWriter writer = httpResponse.getWriter();
         writer.println(response.toHtml());
         IOUtils.closeQuietly(writer);
     }
 
     protected abstract String getSourcePageName(HttpServletRequest httpRequest);
+
+    protected abstract Event getEvent(HttpServletRequest httpRequest);
 
     protected abstract WebUiEngineProvider getWebUiEngineProvider();
 }
