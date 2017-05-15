@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.servlet.http.Cookie;
 
+import com.github.xuzw.ui_engine_runtime.div.location.Location;
 import com.github.xuzw.ui_engine_runtime.event.Event;
 import com.github.xuzw.ui_engine_runtime.event.RefreshEvent;
 import com.github.xuzw.ui_engine_runtime.input.Inputs;
@@ -14,7 +15,9 @@ import com.github.xuzw.ui_engine_runtime.input.Inputs;
  * @time 2017年5月14日 下午9:34:46
  */
 public class WebUiEngineCookies {
-    public static final String key_event_type = "uiEngine.eventType";
+    public static final String key_event_type = "uiEngine.event.type";
+    public static final String key_event_location_className = "uiEngine.event.location.className";
+    public static final String key_event_location_id = "uiEngine.event.location.id";
     public static final String key_prefix_input = "uiEngine.input.";
     private Cookie[] rawCookies;
     private List<Cookie> inputs = new ArrayList<>();
@@ -22,12 +25,14 @@ public class WebUiEngineCookies {
 
     public WebUiEngineCookies(Cookie[] cookies) {
         this.rawCookies = cookies;
-        for (Cookie cookie : cookies) {
-            if (cookie.getName().equals(key_event_type)) {
-                eventType = cookie;
-            }
-            if (cookie.getName().startsWith(key_prefix_input)) {
-                inputs.add(cookie);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if (cookie.getName().equals(key_event_type)) {
+                    eventType = cookie;
+                }
+                if (cookie.getName().startsWith(key_prefix_input)) {
+                    inputs.add(cookie);
+                }
             }
         }
     }
@@ -51,12 +56,17 @@ public class WebUiEngineCookies {
         try {
             Event event = (Event) Class.forName(eventType.getValue()).newInstance();
             event.setInputs(inputs);
+            event.setLocation(getEventLocation());
             return event;
         } catch (Exception e) {
             Event event = new RefreshEvent();
             event.setInputs(inputs);
             return event;
         }
+    }
+
+    public Location getEventLocation() {
+        return new Location(getCookie(key_event_location_className).getValue(), getCookie(key_event_location_id).getValue());
     }
 
     public Inputs getInputs() {
