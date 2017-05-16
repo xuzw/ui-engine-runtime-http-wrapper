@@ -3,11 +3,8 @@ package com.github.xuzw.ui_engine_runtime_http_wrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -23,12 +20,11 @@ import com.github.xuzw.ui_engine_runtime_http_wrapper.provider.WebUiEngineProvid
  * @author 徐泽威 xuzewei_2012@126.com
  * @time 2017年5月12日 下午2:35:14
  */
-public abstract class AbstractWebUiEngineRuntimeHttpFilter implements Filter {
+public abstract class AbstractWebUiEngineRuntimeHttpServlet extends HttpServlet {
+    private static final long serialVersionUID = 1L;
 
     @Override
-    public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain chain) throws IOException, ServletException {
-        HttpServletRequest httpRequest = (HttpServletRequest) servletRequest;
-        HttpServletResponse httpResponse = (HttpServletResponse) servletResponse;
+    protected void doGet(HttpServletRequest httpRequest, HttpServletResponse httpResponse) throws ServletException, IOException {
         httpResponse.setContentType("text/html;charset=UTF-8");
         String sourcePageName = getSourcePageName(httpRequest);
         UiEngine engine = getWebUiEngineProvider().get(httpRequest);
