@@ -11,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.IOUtils;
 
 import com.github.xuzw.ui_engine_runtime.UiEngine;
-import com.github.xuzw.ui_engine_runtime.event.Event;
+import com.github.xuzw.ui_engine_runtime.input.Inputs;
 import com.github.xuzw.ui_engine_runtime.page.AbstractPage;
 import com.github.xuzw.ui_engine_runtime_http_wrapper.cookie.WebUiEngineCookies;
 import com.github.xuzw.ui_engine_runtime_http_wrapper.provider.WebUiEngineProvider;
@@ -28,9 +28,8 @@ public abstract class AbstractWebUiEngineRuntimeHttpServlet extends HttpServlet 
         httpResponse.setContentType("text/html;charset=UTF-8");
         String sourcePageName = getSourcePageName(httpRequest);
         UiEngine engine = getWebUiEngineProvider().get(httpRequest);
-        Event event = getEvent(httpRequest);
-        event.setSource(engine.getPage(sourcePageName));
-        AbstractPage response = engine.execute(event);
+        Inputs inputs = getInputs(httpRequest);
+        AbstractPage response = engine.getPage(sourcePageName).filter(inputs);
         PrintWriter writer = httpResponse.getWriter();
         writer.println(response.toHtml());
         IOUtils.closeQuietly(writer);
@@ -41,8 +40,8 @@ public abstract class AbstractWebUiEngineRuntimeHttpServlet extends HttpServlet 
         return uri.substring(uri.lastIndexOf("/") + 1);
     }
 
-    protected Event getEvent(HttpServletRequest httpRequest) {
-        return new WebUiEngineCookies(httpRequest.getCookies()).getEvent();
+    protected Inputs getInputs(HttpServletRequest httpRequest) {
+        return new WebUiEngineCookies(httpRequest.getCookies()).getInputs();
     }
 
     protected abstract WebUiEngineProvider getWebUiEngineProvider();
